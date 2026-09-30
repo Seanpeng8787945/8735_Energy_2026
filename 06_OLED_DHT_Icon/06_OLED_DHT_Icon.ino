@@ -35,24 +35,40 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(
   U8X8_PIN_NONE
 );
 
-// 繪製稍微縮小的溫度計圖示，位置固定在左側欄位
-void drawThermometerIcon(int x, int y) {
+// 繪製會依溫度變化的溫度計圖示。
+// 以 0~50°C 作為顯示範圍，溫度越高，內部液柱越滿。
+void drawThermometerIcon(int x, int y, float temperature) {
   u8g2.drawFrame(x + 5, y, 5, 21);
   u8g2.drawDisc(x + 7, y + 25, 6);
-  u8g2.drawBox(x + 6, y + 8, 3, 18);
   u8g2.drawLine(x + 11, y + 4, x + 14, y + 4);
   u8g2.drawLine(x + 11, y + 10, x + 14, y + 10);
   u8g2.drawLine(x + 11, y + 16, x + 14, y + 16);
+
+  // 溫度計底部球體固定填滿，內部液柱依溫度增加。
+  int temperatureLevel = constrain((int)temperature, 0, 50);
+  int fillHeight = map(temperatureLevel, 0, 50, 0, 18);
+  if (fillHeight > 0) {
+    u8g2.drawBox(x + 6, y + 26 - fillHeight, 3, fillHeight);
+  }
 }
 
-// 繪製稍微縮小的水滴圖示，位置固定在右側欄位
-void drawDropletIcon(int x, int y) {
+// 繪製會依濕度變化的水滴圖示。
+// 水滴內部以水平水位表示 0~100% 濕度。
+void drawDropletIcon(int x, int y, float humidity) {
   u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
   u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
   u8g2.drawDisc(x + 8, y + 18, 7);
-  u8g2.setColorIndex(0);
-  u8g2.drawDisc(x + 6, y + 17, 2);
-  u8g2.setColorIndex(1);
+
+  // 依濕度繪製由下往上的水位，水位越高代表濕度越高。
+  int humidityLevel = constrain((int)humidity, 0, 100);
+  int waterHeight = map(humidityLevel, 0, 100, 0, 17);
+  int centerX = x + 8;
+
+  for (int row = 0; row < waterHeight; row++) {
+    int rowY = y + 24 - row;
+    int halfWidth = min(7, 2 + row / 3);
+    u8g2.drawHLine(centerX - halfWidth, rowY, halfWidth * 2 + 1);
+  }
 }
 
 void showSensorError() {
@@ -92,7 +108,7 @@ void loop() {
   u8g2.drawVLine(63, 5, 54);
 
   // 左側：溫度計圖示與稍微縮小的溫度數值
-  drawThermometerIcon(6, 14);
+  drawThermometerIcon(6, 14, temperature);
   u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.drawStr(27, 17, "TEMP");
   u8g2.setFont(u8g2_font_9x15_tf);
@@ -100,8 +116,8 @@ void loop() {
   u8g2.print(temperature, 0);
   u8g2.print("C");
 
-  // 右側：水滴圖示與稍微縮小的濕度數值
-  drawDropletIcon(74, 14);
+  // 右側：水滴圖示上移，避免與下方濕度數值重疊
+  drawDropletIcon(74, 5, humidity);
   u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.drawStr(96, 17, "HUMI");
   u8g2.setFont(u8g2_font_9x15_tf);
