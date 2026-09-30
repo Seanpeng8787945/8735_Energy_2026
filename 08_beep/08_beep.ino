@@ -12,28 +12,14 @@
 
 const int BUZZER_PIN = 18;
 
-// 播放一次由低到高、再由高到低的消防車警笛掃頻。
+// 播放一次高低交替的消防車警笛音效。
+// 使用固定音調持續播放，讓無源蜂鳴器得到穩定的 PWM 訊號。
 void playFireTruckSiren() {
-  const int lowFrequency = 650;
-  const int highFrequency = 1250;
-  const int frequencyStep = 25;
-  const int stepDuration = 25;
+  tone(BUZZER_PIN, 650);
+  delay(500);
 
-  // 音調由低升高。
-  for (int frequency = lowFrequency;
-       frequency <= highFrequency;
-       frequency += frequencyStep) {
-    tone(BUZZER_PIN, frequency, stepDuration);
-    delay(stepDuration);
-  }
-
-  // 音調由高降低。
-  for (int frequency = highFrequency;
-       frequency >= lowFrequency;
-       frequency -= frequencyStep) {
-    tone(BUZZER_PIN, frequency, stepDuration);
-    delay(stepDuration);
-  }
+  tone(BUZZER_PIN, 1250);
+  delay(500);
 }
 
 void setup() {
