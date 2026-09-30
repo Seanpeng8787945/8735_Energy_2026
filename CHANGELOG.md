@@ -30,3 +30,8 @@
 - 放大溫度與濕度數值字型，提高 OLED 可讀性。
 - 使用 DHT11 DATA=IO20、OLED 第一組 I2C（Wire，SDA=IO3、SCL=IO4）。
 - 已完成 HUB-8735 Ultra 編譯與燒錄測試：`upload success`。
+
+## v0.3.1 - 2026-09-30
+
+- 稍微縮小 `06_OLED_DHT_Icon` 的溫度計、水滴圖示與溫濕度數值字型。
+- 調整數值位置，增加左右欄位的顯示空間。

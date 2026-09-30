@@ -35,23 +35,23 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(
   U8X8_PIN_NONE
 );
 
-// 繪製簡單溫度計圖示，位置固定在左側欄位
+// 繪製稍微縮小的溫度計圖示，位置固定在左側欄位
 void drawThermometerIcon(int x, int y) {
-  u8g2.drawFrame(x + 5, y, 6, 25);
-  u8g2.drawDisc(x + 8, y + 29, 7);
-  u8g2.drawBox(x + 7, y + 10, 3, 19);
-  u8g2.drawLine(x + 12, y + 5, x + 16, y + 5);
-  u8g2.drawLine(x + 12, y + 12, x + 16, y + 12);
-  u8g2.drawLine(x + 12, y + 19, x + 16, y + 19);
+  u8g2.drawFrame(x + 5, y, 5, 21);
+  u8g2.drawDisc(x + 7, y + 25, 6);
+  u8g2.drawBox(x + 6, y + 8, 3, 18);
+  u8g2.drawLine(x + 11, y + 4, x + 14, y + 4);
+  u8g2.drawLine(x + 11, y + 10, x + 14, y + 10);
+  u8g2.drawLine(x + 11, y + 16, x + 14, y + 16);
 }
 
-// 繪製簡單水滴圖示，位置固定在右側欄位
+// 繪製稍微縮小的水滴圖示，位置固定在右側欄位
 void drawDropletIcon(int x, int y) {
-  u8g2.drawTriangle(x + 10, y, x + 1, y + 17, x + 10, y + 30);
-  u8g2.drawTriangle(x + 10, y, x + 19, y + 17, x + 10, y + 30);
-  u8g2.drawDisc(x + 10, y + 21, 9);
+  u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
+  u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
+  u8g2.drawDisc(x + 8, y + 18, 7);
   u8g2.setColorIndex(0);
-  u8g2.drawDisc(x + 7, y + 20, 2);
+  u8g2.drawDisc(x + 6, y + 17, 2);
   u8g2.setColorIndex(1);
 }
 
@@ -91,21 +91,21 @@ void loop() {
   // 中央垂直分隔線，將畫面分成左右兩區
   u8g2.drawVLine(63, 5, 54);
 
-  // 左側：溫度計圖示與放大溫度數值
-  drawThermometerIcon(5, 12);
+  // 左側：溫度計圖示與稍微縮小的溫度數值
+  drawThermometerIcon(6, 14);
   u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.drawStr(27, 17, "TEMP");
-  u8g2.setFont(u8g2_font_10x20_tf);
-  u8g2.setCursor(24, 48);
+  u8g2.setFont(u8g2_font_9x15_tf);
+  u8g2.setCursor(27, 46);
   u8g2.print(temperature, 0);
   u8g2.print("C");
 
-  // 右側：水滴圖示與放大濕度數值
-  drawDropletIcon(72, 10);
+  // 右側：水滴圖示與稍微縮小的濕度數值
+  drawDropletIcon(74, 14);
   u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.drawStr(96, 17, "HUMI");
-  u8g2.setFont(u8g2_font_10x20_tf);
-  u8g2.setCursor(80, 48);
+  u8g2.setFont(u8g2_font_9x15_tf);
+  u8g2.setCursor(82, 46);
   u8g2.print(humidity, 0);
   u8g2.print("%");
 
