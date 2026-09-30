@@ -36,38 +36,47 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(
 );
 
 // 繪製會依溫度變化的溫度計圖示。
-// 以 0~50°C 作為顯示範圍，溫度越高，內部液柱越滿。
+// 以 10~50°C 作為顯示範圍，10°C 為最低，50°C 為最高。
 void drawThermometerIcon(int x, int y, float temperature) {
   u8g2.drawFrame(x + 5, y, 5, 21);
-  u8g2.drawDisc(x + 7, y + 25, 6);
+  u8g2.drawCircle(x + 7, y + 25, 6);
   u8g2.drawLine(x + 11, y + 4, x + 14, y + 4);
   u8g2.drawLine(x + 11, y + 10, x + 14, y + 10);
   u8g2.drawLine(x + 11, y + 16, x + 14, y + 16);
 
-  // 溫度計底部球體固定填滿，內部液柱依溫度增加。
-  int temperatureLevel = constrain((int)temperature, 0, 50);
-  int fillHeight = map(temperatureLevel, 0, 50, 0, 18);
+  // 10°C 以下為最低液柱，之後隨溫度上升，50°C 時填滿。
+  int temperatureLevel = constrain((int)temperature, 10, 50);
+  int fillHeight = map(temperatureLevel, 10, 50, 0, 18);
   if (fillHeight > 0) {
     u8g2.drawBox(x + 6, y + 26 - fillHeight, 3, fillHeight);
+    u8g2.drawDisc(x + 7, y + 25, 5);
   }
 }
 
 // 繪製會依濕度變化的水滴圖示。
-// 水滴內部以水平水位表示 0~100% 濕度。
+// 0% 為空心水滴，水位由下往上增加，100% 為實心水滴。
 void drawDropletIcon(int x, int y, float humidity) {
   u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
   u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
-  u8g2.drawDisc(x + 8, y + 18, 7);
 
   // 依濕度繪製由下往上的水位，水位越高代表濕度越高。
   int humidityLevel = constrain((int)humidity, 0, 100);
-  int waterHeight = map(humidityLevel, 0, 100, 0, 17);
+  int waterHeight = map(humidityLevel, 0, 100, 0, 20);
   int centerX = x + 8;
 
-  for (int row = 0; row < waterHeight; row++) {
-    int rowY = y + 24 - row;
-    int halfWidth = min(7, 2 + row / 3);
-    u8g2.drawHLine(centerX - halfWidth, rowY, halfWidth * 2 + 1);
+  if (humidityLevel >= 100) {
+    // 100% 時填滿整個水滴，再補上外框。
+    u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
+    u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
+    u8g2.drawDisc(x + 8, y + 18, 7);
+    u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
+    u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
+  } else {
+    for (int row = 0; row < waterHeight; row++) {
+      int rowY = y + 24 - row;
+      int halfWidth = min(7, 2 + row / 3);
+      u8g2.drawHLine(centerX - halfWidth, rowY, halfWidth * 2 + 1);
+    }
   }
 }
 
