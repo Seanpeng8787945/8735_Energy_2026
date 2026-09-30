@@ -36,28 +36,37 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(
 );
 
 // 繪製會依溫度變化的溫度計圖示。
-// 以 10~50°C 作為顯示範圍，10°C 為最低，50°C 為最高。
+// 以 10~50°C 作為顯示範圍，並切成 8 格，讓液柱變化更明顯。
 void drawThermometerIcon(int x, int y, float temperature) {
-  u8g2.drawFrame(x + 5, y, 5, 21);
-  u8g2.drawCircle(x + 7, y + 25, 6);
-  u8g2.drawLine(x + 11, y + 4, x + 14, y + 4);
-  u8g2.drawLine(x + 11, y + 10, x + 14, y + 10);
-  u8g2.drawLine(x + 11, y + 16, x + 14, y + 16);
+  // 溫度計外框與底部球體。
+  u8g2.drawFrame(x + 3, y, 10, 25);
+  u8g2.drawCircle(x + 8, y + 28, 6);
+  u8g2.drawLine(x + 14, y + 4, x + 17, y + 4);
+  u8g2.drawLine(x + 14, y + 12, x + 17, y + 12);
+  u8g2.drawLine(x + 14, y + 20, x + 17, y + 20);
 
-  // 10°C 以下為最低液柱，之後隨溫度上升，50°C 時填滿。
+  // 10°C 以下為最低液柱，50°C 時填滿 8 格。
   int temperatureLevel = constrain((int)temperature, 10, 50);
-  int fillHeight = map(temperatureLevel, 10, 50, 0, 18);
-  if (fillHeight > 0) {
-    u8g2.drawBox(x + 6, y + 26 - fillHeight, 3, fillHeight);
-    u8g2.drawDisc(x + 7, y + 25, 5);
+  int filledSegments = map(temperatureLevel, 10, 50, 0, 8);
+
+  for (int segment = 0; segment < filledSegments; segment++) {
+    int segmentY = y + 21 - (segment * 3);
+    u8g2.drawBox(x + 5, segmentY, 6, 2);
+  }
+
+  // 溫度高於 10°C 時填入底部球體，讓低溫到高溫的變化更清楚。
+  if (filledSegments > 0) {
+    u8g2.drawDisc(x + 8, y + 28, 5);
   }
 }
 
 // 繪製會依濕度變化的水滴圖示。
 // 0% 為空心水滴，水位由下往上增加，100% 為實心水滴。
 void drawDropletIcon(int x, int y, float humidity) {
+  // 先畫空心水滴外框，確保 0% 時仍然清楚可辨識。
   u8g2.drawTriangle(x + 8, y, x + 1, y + 14, x + 8, y + 25);
   u8g2.drawTriangle(x + 8, y, x + 15, y + 14, x + 8, y + 25);
+  u8g2.drawCircle(x + 8, y + 18, 7);
 
   // 依濕度繪製由下往上的水位，水位越高代表濕度越高。
   int humidityLevel = constrain((int)humidity, 0, 100);
@@ -74,8 +83,22 @@ void drawDropletIcon(int x, int y, float humidity) {
   } else {
     for (int row = 0; row < waterHeight; row++) {
       int rowY = y + 24 - row;
-      int halfWidth = min(7, 2 + row / 3);
+      // 由下往上逐步縮窄，形成較明顯的實心水位區域。
+      int halfWidth;
+      if (row < 4) {
+        halfWidth = 5;
+      } else if (row < 10) {
+        halfWidth = 6;
+      } else {
+        halfWidth = 4;
+      }
       u8g2.drawHLine(centerX - halfWidth, rowY, halfWidth * 2 + 1);
+    }
+
+    // 在水位頂端加粗一條水平線，讓濕度變化更容易辨識。
+    if (waterHeight > 0) {
+      int waterTop = y + 24 - waterHeight;
+      u8g2.drawHLine(x + 3, waterTop, 11);
     }
   }
 }
