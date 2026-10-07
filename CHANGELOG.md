@@ -108,6 +108,20 @@
 
 - 新增 `HANDOFF.md`，整理專案狀態、硬體腳位、Arduino CLI 路徑、編譯指令與 HUB-8735 專用燒錄流程，供後續 AI 接手。
 
+## v0.8.0 - 2026-10-07
+
+- 新增 `10_OLED_AQI_PM`：透過 Wi-Fi 連線至環境部 AQX_P_432 API。
+- 使用 ArduinoJson 篩選桃園市中壢測站資料，取得 AQI 與 PM2.5。
+- 每 1 分鐘更新一次，並在 OLED 顯示 Wi-Fi 連線與資料更新狀態。
+- 已使用 HUB-8735 Ultra 核心完成編譯；尚未執行實機燒錄。
+
+## v0.9.0 - 2026-10-07
+
+- 參考已驗證的 `youjunjer/8735_Energy_2026` AQI 實作更新 `10_OLED_AQI_PM`。
+- 修正環境部 API 使用 HTTP chunked response 時的資料讀取方式。
+- 修正 API 回應為頂層 JSON 陣列的解析方式。
+- 已重新編譯並成功燒錄至 HUB-8735 Ultra。
+
 ## v0.5.2 - 2026-09-30
 
 - 新增 `08_beep`：使用 IO18 的無源蜂鳴器播放消防車高低音警報效果。
