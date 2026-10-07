@@ -58,10 +58,10 @@ C:\Users\彭暐翔\AppData\Local\Arduino15\packages\ideasHatch\tools\ameba_pro2_
 最新整合程式為：
 
 ```text
-10_OLED_AQI_PM\10_OLED_AQI_PM.ino
+12_ThingSpeak\12_ThingSpeak.ino
 ```
 
-版本：`v0.9.0`
+版本：`v1.0.0`
 
 上一版整合程式仍保留於：
 
@@ -69,13 +69,16 @@ C:\Users\彭暐翔\AppData\Local\Arduino15\packages\ideasHatch\tools\ameba_pro2_
 09_OLED_DHT_led_beep\09_OLED_DHT_led_beep.ino
 ```
 
-`10_OLED_AQI_PM` 功能：
+`12_ThingSpeak` 功能：
 
 - 連線 Wi-Fi 後顯示 `wifi connecting...`、`wifi connected`。
 - 每 1 分鐘向環境部 AQX_P_432 API 取得資料。
 - 使用 ArduinoJson 篩選桃園市中壢測站，顯示 AQI 與 PM2.5。
 - 每次取得資料時顯示 `data updating...`。
-- 已完成 HUB-8735 Ultra 編譯，產生 `application.ntz` 與 `flash_ntz.bin`；尚未燒錄至開發板。
+- 保留 DHT11、雙頁 OLED、三色 LED 與蜂鳴器警報功能。
+- 每 30 秒將溫度、濕度、AQI、PM2.5 上傳至 ThingSpeak 的 `field1`～`field4`。
+- 上傳時顯示 `data uploading...`。
+- 已完成 HUB-8735 Ultra 編譯、燒錄，結果為 `upload success`。
 
 v0.9.0 修正：環境部 AQI API 使用 HTTP chunked response，且回應最外層為 JSON 陣列；`10_OLED_AQI_PM` 已依驗證專案的處理方式更新，並已成功燒錄。
 
