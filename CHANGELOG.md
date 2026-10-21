@@ -129,6 +129,20 @@
 - 上傳資料時 OLED 顯示 `data uploading...`。
 - 已完成編譯並成功燒錄至 HUB-8735 Ultra。
 
+## v1.1.0 - 2026-10-14
+
+- 新增 `13_MQTT`：使用 `mqttgo.io:1883` 發布溫度與濕度 JSON。
+- MQTT Topic：`Seanpeng/class105/data`，每 15 秒傳送一次。
+- OLED 顯示 Wi-Fi、MQTT 連線與資料傳輸狀態。
+- 已完成編譯並成功燒錄至 HUB-8735 Ultra。
+
+## v1.2.0 - 2026-10-14
+
+- 新增 `13-2_MQTT_light_add`：加入 IO0 光敏電阻亮度資料。
+- MQTT payload 增加 `light` 欄位，格式為 `{"temp":25,"humi":72,"light":92}`。
+- 第二頁 OLED 顯示溫度、濕度與亮度。
+- 已完成編譯並成功燒錄至 HUB-8735 Ultra。
+
 ## v0.5.2 - 2026-09-30
 
 - 新增 `08_beep`：使用 IO18 的無源蜂鳴器播放消防車高低音警報效果。
