@@ -1,6 +1,6 @@
 # 8735 智慧節能專案｜AI 交接紀錄
 
-更新日期：2026-10-21（Asia/Taipei）
+更新日期：2026-10-28（Asia/Taipei）
 
 ## 1. 專案與 GitHub
 
@@ -9,7 +9,7 @@
 - 分支：`main`
 - 遠端：`origin`，目前 `main` 與 `origin/main` 同步。
 - 最新提交：`fdcba25 Add MQTT light data result photo`
-- 最新已燒錄程式：`13-2_MQTT_light_add\13-2_MQTT_light_add.ino`
+- 最新已燒錄程式：`19_YOLO_person\19_YOLO_person.ino`
 - 目前工作區有多個未追蹤的舊編譯資料夾與備份草稿，例如 `10_OLED_AQI_PM\build*`、`10_OLED_AQI_PM2.5`、`10_OLED_AQI_PM2_5`；不要自行加入提交，也不要刪除使用者檔案。
 
 ## 2. Arduino CLI 與燒錄工具（重要）
@@ -143,6 +143,72 @@ upload success
 - 保留 AQI/PM2.5、ThingSpeak、LED 與蜂鳴器功能。
 - 最近一次燒錄結果：`upload success`。
 
+### `14_rtsp`（目前最新已燒錄）
+
+檔案：`14_rtsp\14_rtsp.ino`
+
+- 參考核心內建 `StreamRTSP\SingleVideoWithAudio` 範例。
+- 使用 HD 1280x720、H.264、30 FPS 影像。
+- 使用 AAC 編碼傳送麥克風聲音。
+- OLED 顯示 Wi-Fi 連線過程、連線後 IP、RTSP Port 與串流格式。
+- Wi-Fi：`Seanpeng8787`。
+- 燒錄結果：`upload success`。
+
+### `15_face`（目前最新已燒錄）
+
+檔案：`15_face\15_face.ino`
+
+- 以 `14_rtsp` 為基礎加入 SCRFD 人臉偵測與 MobileFaceNet 人臉辨識。
+- 保留 HD 1280x720 H.264 + AAC 聲音 RTSP 串流。
+- 使用 Wi-Fi 網頁介面取代 Serial Monitor 指令。
+- 網頁按鈕支援 Register、Delete、Reset、Backup、Restore。
+- Register 與 Delete 使用網頁姓名欄位；Register 時畫面中只能有一張臉。
+- OLED 顯示 IP、RTSP Port、Web Port 80；MJPEG 預覽使用 Port 8080。
+- 開機自動從 Flash 還原人臉資料；Register、Delete、Reset 後自動備份到 Flash。
+- 燒錄結果：`upload success`。
+
+### `16_sg90`
+
+檔案：`16_sg90\16_sg90.ino`
+
+- SG90 訊號線使用 IO21。
+- 每秒依序轉動 0 → 90 → 180 → 0 度。
+- 回到 0 度後停 5 秒，再重複循環。
+- 已完成編譯驗證，未單獨燒錄。
+
+### `17_face_sg90`（目前最新已燒錄）
+
+檔案：`17_face_sg90\17_face_sg90.ino`
+
+- 以 `15_face` 為基礎加入 SG90，訊號線使用 IO21。
+- 保留 RTSP HD H.264 + AAC、Port 80 控制頁與 Port 8080 MJPEG。
+- 畫面中出現已辨識的人臉時，SG90 轉至 90 度並維持 5 秒，再回到 0 度。
+- 只有 unknown 人臉時不動作。
+- 同一位已辨識的人持續在畫面中時，只觸發一次；離開後再次出現才會再次觸發。
+- 人臉資料開機自動還原，異動後自動備份至 Flash。
+- 三色 LED：已辨識人臉綠燈（IO24）、unknown 紅燈（IO22）、無人臉黃燈（IO23）。若同時出現已辨識與 unknown，綠燈優先。
+- 開機前 5 秒禁止伺服觸發；已辨識人臉需連續出現約 1 秒才觸發；人臉離開至少 1 秒後才重新允許觸發。
+- 燒錄結果：`upload success`（加入三色 LED 與 SG90 防誤觸發修正版）。
+
+### `18_YOLO`（目前最新已燒錄）
+
+- 檔案：`18_YOLO\18_YOLO.ino`
+- 參考內建 `NeuralNetwork\examples\ObjectDetectionLoop` 範例。
+- 使用內建 `DEFAULT_YOLOV4TINY` 進行物件辨識，將物件框與名稱標記在 HD H.264 RTSP 畫面上。
+- 保留 AAC 麥克風聲音並透過 RTSP 傳送。
+- Wi-Fi SSID：`Seanpeng8787`；OLED 顯示 `WiFi connecting...`、`WiFi retrying...`、`WiFi connected` 與取得後的 IP。
+- 啟動完成後 OLED 顯示 YOLO READY、IP 與 RTSP Port。
+- 燒錄結果：`upload success`（2026-10-28）。
+
+### `19_YOLO_person`（目前最新已燒錄）
+
+- 檔案：`19_YOLO_person\19_YOLO_person.ino`
+- 以 `18_YOLO` 內建 YOLOv4-tiny 物件辨識為基礎，只保留 COCO `person` 類別。
+- 人員外框為紅色、線寬 5；其他物件不繪製也不計數。
+- RTSP 畫面左上角顯示目前人數，格式為 `Person=N`。
+- 保留 Wi-Fi 連線過程、取得 IP 後的 OLED 顯示，以及 HD H.264/AAC RTSP。
+- 燒錄結果：`upload success`（2026-10-28）。
+
 ### AQI API
 
 - API Host：`data.moenv.gov.tw`
@@ -203,6 +269,12 @@ wifiClient.setNonBlockingMode();
 - `12_ThingSpeak`：ThingSpeak 上傳
 - `13_MQTT`：MQTT 溫濕度上傳
 - `13-2_MQTT_light_add`：MQTT 溫濕度與亮度上傳，目前最新
+- `14_rtsp`：HD H.264 影像與 AAC 聲音 RTSP 串流，目前最新
+- `15_face`：RTSP、AAC、人臉辨識與 Wi-Fi 網頁控制，目前最新
+- `16_sg90`：SG90 IO21 角度循環測試
+- `17_face_sg90`：人臉辨識觸發 SG90，目前最新已燒錄
+- `18_YOLO`：內建 YOLOv4-tiny 物件辨識與 HD H.264/AAC RTSP，目前最新已燒錄
+- `19_YOLO_person`：只標示人員、紅色寬框與 `Person=N` 顯示，目前最新已燒錄
 
 ## 10. 成果資料
 
