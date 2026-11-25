@@ -26,8 +26,9 @@
 
 #define VIDEO_CHANNEL 0
 #define NN_CHANNEL 3
-#define NN_WIDTH 576
-#define NN_HEIGHT 320
+// Must match the custom YOLOv7-tiny NBG model trained/exported at 416x416.
+#define NN_WIDTH 416
+#define NN_HEIGHT 416
 
 static const char MODEL_PATH[] = "sd:/NN_MDL/yolov7_tiny.nb";
 
