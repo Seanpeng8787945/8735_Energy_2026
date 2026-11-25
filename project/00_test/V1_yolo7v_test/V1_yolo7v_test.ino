@@ -32,7 +32,7 @@
 static const char MODEL_PATH[] = "sd:/NN_MDL/yolov7_tiny.nb";
 
 char WIFI_SSID[] = "Seanpeng8787";
-const char WIFI_PASSWORD[] = "0968709789";
+const char WIFI_PASSWORD[] = "0968709788";
 
 VideoSetting videoConfig(VIDEO_HD, CAM_FPS, VIDEO_H264, 0);
 VideoSetting nnConfig(NN_WIDTH, NN_HEIGHT, 10, VIDEO_RGB, 0);
