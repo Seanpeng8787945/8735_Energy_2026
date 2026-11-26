@@ -87,6 +87,8 @@ void setup()
   Serial.println(MODEL_PATH);
 
   connectWiFi();
+  // RTSP/VLC stream is explicitly landscape: 1280x720, rotation 0 degrees.
+  videoConfig.setRotation(0);
   videoConfig.setBitrate(2 * 1024 * 1024);
   Camera.configVideoChannel(VIDEO_CHANNEL, videoConfig);
   Camera.configVideoChannel(NN_CHANNEL, nnConfig);
@@ -150,7 +152,8 @@ void loop()
     Serial.println(item.score());
   }
   char count[24];
-  snprintf(count, sizeof(count), "objects=%d", shown);
+  // ':' is supported by the small OSD font; '=' is not.
+  snprintf(count, sizeof(count), "objects:%d", shown);
   OSD.drawText(VIDEO_CHANNEL, 8, 24, count, OSD_COLOR_RED);
   OSD.update(VIDEO_CHANNEL);
   delay(50);
