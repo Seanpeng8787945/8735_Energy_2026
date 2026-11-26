@@ -96,9 +96,6 @@ void setup()
   rtsp.configVideo(videoConfig);
   rtsp.begin();
   objectDetection.configVideo(nnConfig);
-  // Lower the confidence threshold to improve recall for small/partly occluded items.
-  // Results below 30% are still ignored; NMS remains at 0.45.
-  objectDetection.configThreshold(0.30, 0.45);
   objectDetection.modelSelect(OBJECT_DETECTION, CUSTOMIZED_YOLOV7TINY, NA_MODEL, NA_MODEL);
   objectDetection.begin();
 
