@@ -158,13 +158,11 @@ void loop()
     ObjectDetectionResult item = results[i];
     const int type = item.type();
     if (type < 0 || type >= CLASS_COUNT) continue;
-    const float boxWidth = item.xMax() - item.xMin();
-    const float boxHeight = item.yMax() - item.yMin();
-    const float boxArea = boxWidth * boxHeight;
+    const float boxArea = (item.xMax() - item.xMin()) * (item.yMax() - item.yMin());
     const bool touchesEdge = item.xMin() < 0.03f || item.yMin() < 0.03f ||
                              item.xMax() > 0.97f || item.yMax() > 0.97f;
     // Reject oversized, edge-spanning, or near-full-screen false positives.
-    if (boxArea >= 0.45f || boxWidth >= 0.75f || boxHeight >= 0.75f || touchesEdge) continue;
+    if (boxArea >= 0.45f || touchesEdge) continue;
     ++shown;
     const int xmin = (int)(item.xMin() * imageWidth);
     const int xmax = (int)(item.xMax() * imageWidth);
