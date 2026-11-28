@@ -3,7 +3,7 @@
  * SD card file: NN_MDL/yolov7_tiny.nb
  * Input: 416x416 RGB888
  * Classes: 0 metal, 1 paper, 2 plastic, 3 trash (general)
- * Box-area filter: detections larger than 50% of the frame are ignored.
+ * Box-area filter: detections larger than 25% of the frame are ignored.
  */
 
 #include <WiFi.h>
@@ -112,7 +112,7 @@ void setup()
   Serial.println(rtspPort);
   objectDetection.configVideo(nnConfig);
   // Suppress the current model's low-confidence full-frame false positives.
-  objectDetection.configThreshold(0.60, 0.30);
+  objectDetection.configThreshold(0.70, 0.30);
   objectDetection.modelSelect(OBJECT_DETECTION, CUSTOMIZED_YOLOV7TINY, NA_MODEL, NA_MODEL);
   objectDetection.begin();
 
@@ -161,8 +161,10 @@ void loop()
     const float boxWidth = item.xMax() - item.xMin();
     const float boxHeight = item.yMax() - item.yMin();
     const float boxArea = boxWidth * boxHeight;
-    // Reject full-screen or near-full-screen false positives.
-    if (boxArea > 0.50f) continue;
+    const bool touchesEdge = item.xMin() < 0.03f || item.yMin() < 0.03f ||
+                             item.xMax() > 0.97f || item.yMax() > 0.97f;
+    // Reject oversized, edge-spanning, or near-full-screen false positives.
+    if (boxArea >= 0.25f || boxWidth >= 0.75f || boxHeight >= 0.75f || touchesEdge) continue;
     ++shown;
     const int xmin = (int)(item.xMin() * imageWidth);
     const int xmax = (int)(item.xMax() * imageWidth);
