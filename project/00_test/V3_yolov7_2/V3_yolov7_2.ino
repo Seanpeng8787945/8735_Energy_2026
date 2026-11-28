@@ -113,7 +113,7 @@ void setup()
   Serial.println(rtspPort);
   objectDetection.configVideo(nnConfig);
   // Suppress the current model's low-confidence full-frame false positives.
-  objectDetection.configThreshold(0.70, 0.30);
+  objectDetection.configThreshold(0.50, 0.30);
   objectDetection.modelSelect(OBJECT_DETECTION, CUSTOMIZED_YOLOV7TINY, NA_MODEL, NA_MODEL);
   objectDetection.begin();
 
@@ -162,7 +162,7 @@ void loop()
     const float boxArea = (item.xMax() - item.xMin()) * (item.yMax() - item.yMin());
     const float boxHeight = item.yMax() - item.yMin();
     // Reject only oversized, near-full-screen false positives.
-    if (boxArea >= 0.45f || boxHeight > 0.90f) continue;
+    if (boxArea >= 0.70f || boxHeight > 1.00f) continue;
     ++shown;
     const int xmin = (int)(item.xMin() * imageWidth);
     const int xmax = (int)(item.xMax() * imageWidth);
