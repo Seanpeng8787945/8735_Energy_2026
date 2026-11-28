@@ -112,7 +112,7 @@ void setup()
   Serial.println(rtspPort);
   objectDetection.configVideo(nnConfig);
   // Suppress the current model's low-confidence full-frame false positives.
-  objectDetection.configThreshold(0.65, 0.30);
+  objectDetection.configThreshold(0.50, 0.30);
   objectDetection.modelSelect(OBJECT_DETECTION, CUSTOMIZED_YOLOV7TINY, NA_MODEL, NA_MODEL);
   objectDetection.begin();
 
