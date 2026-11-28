@@ -100,8 +100,8 @@ void setup()
 
   connectWiFi();
   // RTSP/VLC stream is explicitly landscape: 1280x720, rotation 0 degrees.
-  // Rotate the camera stream right so VLC receives landscape video.
-  videoConfig.setRotation(1);
+  // Use the camera's native landscape orientation; do not rotate frames.
+  videoConfig.setRotation(0);
   videoConfig.setBitrate(2 * 1024 * 1024);
   Camera.configVideoChannel(VIDEO_CHANNEL, videoConfig);
   Camera.configVideoChannel(NN_CHANNEL, nnConfig);
